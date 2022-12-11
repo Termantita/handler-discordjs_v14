@@ -6,15 +6,17 @@ const {
   PresenceUpdateStatus,
   Collection,
 } = require("discord.js");
-const BotUtils = require("./Utils");
 
-const token = process.env.TOKEN || "MTA1MDY2OTMzNzY1ODI2OTc2Nw.GWvVyu.zvlHKJ10ZgibIZfCp5slFxgh54t6faEhh6bd_Q";
-const clientId = process.env.CLIENT_ID;
-const prefix = process.env.PREFIX || "m!";
-const status = process.env.STATUS || "Decoren Abendregen";
-const statusType = process.env.STATUS_TYPE;
-const color = process.env.COLOR;
-const ownerId = process.env.OWNER_ID;
+const { connectDB } = require('../db/config');
+const BotUtils = require("./Utils");
+const config = require('../config');
+
+const token = config.TOKEN
+const prefix = config.PREFIX
+const status = config.STATUS;
+const statusType = config.STATUS_TYPE;
+const color = config.COLOR;
+const ownerId = config.OWNER_ID;
 
 module.exports = class extends Client {
   constructor(
@@ -52,7 +54,7 @@ module.exports = class extends Client {
       },
     }
   ) {
-    super({ ...options });
+    super({...options});
 
     this.commands = new Collection();
     this.slashCommands = new Collection();
@@ -68,6 +70,7 @@ module.exports = class extends Client {
     await this.loadEvents();
     await this.loadCommands();
     await this.loadSlashCommands();
+    await connectDB();
     this.login(token);
   }
 
@@ -97,12 +100,12 @@ module.exports = class extends Client {
       });
     }
 
-    console.log(`(${prefix}) ${this.commands.size} Loaded Commands`.green);
+    console.log(`(${prefix}) ${this.commands.size} Loaded Commands\n`.green);
   }
 
   async loadSlashCommands() {
     console.log(`(/) Loading Commands...`.yellow);
-    await this.commands.clear();
+    await this.slashCommands.clear();
     this.slashArray = [];
 
     const FILES_PATH = await this.utils.loadFiles("/src/slashCommands");
@@ -153,7 +156,7 @@ module.exports = class extends Client {
       });
     }
 
-    console.log(`(-) ${FILES_PATH.length} Loaded Handlers`.green);
+    console.log(`(-) ${FILES_PATH.length} Loaded Handlers\n`.green);
   }
 
   async loadEvents() {
@@ -181,6 +184,6 @@ module.exports = class extends Client {
       });
     }
 
-    console.log(`(+) ${FILES_PATH.length} Loaded Events`.green);
+    console.log(`(+) ${FILES_PATH.length} Loaded Events\n`.green);
   }
 };

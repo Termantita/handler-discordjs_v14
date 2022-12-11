@@ -1,6 +1,8 @@
 module.exports = async (client, interaction) => {
   if (!interaction.guild || !interaction.channel) return;
 
+  if(!interaction.isChatInputCommand()) return;
+
   const COMMAND = client.slashCommands.get(interaction?.commandName);
 
   if (COMMAND) {

@@ -6,8 +6,9 @@ module.exports = (client = Client) => {
     console.log(`(/) ${client.slashCommands.size} Published Commands`.green);
   }
 
-  setTimeout(() => [
+  setTimeout(() => [console.clear(),
   console.log(`Logged in as ${client.user.tag}`.green)]
-  , 700);
-  // console.log(`Logged in as ${client.user.tag}`.green);
+  , 1600);
+  // setTimeout(() => console.log(`Logged in as ${client.user.tag}`.green)
+  //   , 1000);
 };

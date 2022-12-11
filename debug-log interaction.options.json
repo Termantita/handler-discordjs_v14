@@ -1,0 +1,84 @@
+{
+  "intents": 33283,
+  "partials": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "allowsMention": {
+    "parse": [
+      "roles",
+      "users"
+    ],
+    "repliedUser": false
+  },
+  "presence": {
+    "activities": [
+      {
+        "name": "Decoren Abendregen",
+        "type": 3
+      }
+    ],
+    "status": "online",
+    "user": {
+      "id": null
+    }
+  },
+  "closeTimeout": 5000,
+  "waitGuildTimeout": 15000,
+  "shardCount": 1,
+  "failIfNotExists": true,
+  "sweepers": {
+    "threads": {
+      "interval": 3600,
+      "lifetime": 14400
+    }
+  },
+  "ws": {
+    "large_threshold": 50,
+    "compress": false,
+    "properties": {
+      "os": "win32",
+      "browser": "discord.js",
+      "device": "discord.js"
+    },
+    "version": 10,
+    "presence": {
+      "activities": [
+        {
+          "type": 3,
+          "name": "Decoren Abendregen"
+        }
+      ],
+      "afk": false,
+      "since": null,
+      "status": "online"
+    }
+  },
+  "rest": {
+    "agent": {
+      "_events": {},
+      "_eventsCount": 0
+    },
+    "api": "https://discord.com/api",
+    "authPrefix": "Bot",
+    "cdn": "https://cdn.discordapp.com",
+    "headers": {},
+    "invalidRequestWarningInterval": 0,
+    "globalRequestsPerSecond": 50,
+    "offset": 50,
+    "rejectOnRateLimit": null,
+    "retries": 3,
+    "timeout": 15000,
+    "userAgentAppendix": "Node.js v16.18.0",
+    "version": "10",
+    "hashSweepInterval": 14400000,
+    "hashLifetime": 86400000,
+    "handlerSweepInterval": 3600000
+  },
+  "shards": [
+    0
+  ]
+}
