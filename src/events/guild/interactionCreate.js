@@ -1,3 +1,5 @@
+const { OWNER_ID } = require('../../config');
+
 module.exports = async (client, interaction) => {
   if (!interaction.guild || !interaction.channel) return;
 
@@ -8,11 +10,10 @@ module.exports = async (client, interaction) => {
   if (COMMAND) {
     if (COMMAND.OWNER) {
       // const OWNERS = process.env.OWNERS_ID.split(' ');
-      const OWNER = process.env.OWNER_ID;
 
-      if (!OWNER.includes(interaction.user.id))
+      if (!OWNER_ID.includes(interaction.user.id))
         return interaction.reply({
-          content: `❌ **Solo los dueños de este bot pueden ejecutar este comando**\nDueño del bot: ${process.env.OWNER}`,
+          content: `❌ **Solo los dueños de este bot pueden ejecutar este comando**\nDueño del bot: ${OWNER_ID}`,
         });
     }
 
