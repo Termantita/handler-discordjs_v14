@@ -5,17 +5,20 @@ const {
   ActivityType,
   PresenceUpdateStatus,
   Collection,
+  Colors,
 } = require("discord.js");
 
-const { connectDB } = require('../db/config');
-const BotUtils = require("./Utils");
-const config = require('../config');
+const { connectDB } = require("../db/config");
 
-const token = config.TOKEN
-const prefix = config.PREFIX
+const BotUtils = require("./Utils");
+
+const config = require("../config");
+
+const token = config.TOKEN;
+const prefix = config.PREFIX;
 const status = config.STATUS;
 const statusType = config.STATUS_TYPE;
-const color = config.COLOR;
+const color = Colors.Red;
 const ownerId = config.OWNER_ID;
 
 module.exports = class extends Client {
@@ -54,10 +57,11 @@ module.exports = class extends Client {
       },
     }
   ) {
-    super({...options});
-
+    super({ ...options });
+    this.color = color;
     this.commands = new Collection();
     this.slashCommands = new Collection();
+    this.modalsSubmit = new Collection();
     this.slashArray = [];
 
     this.utils = new BotUtils(this);
@@ -70,6 +74,7 @@ module.exports = class extends Client {
     await this.loadEvents();
     await this.loadCommands();
     await this.loadSlashCommands();
+
     await connectDB();
     this.login(token);
   }
@@ -105,7 +110,7 @@ module.exports = class extends Client {
 
   async loadSlashCommands() {
     console.log(`(/) Loading Commands...`.yellow);
-    await this.slashCommands.clear();
+    this.slashCommands.clear();
     this.slashArray = [];
 
     const FILES_PATH = await this.utils.loadFiles("/src/slashCommands");
@@ -142,7 +147,6 @@ module.exports = class extends Client {
 
   async loadHandlers() {
     console.log(`(-) Loading Handlers...`.yellow);
-    await this.commands.clear();
 
     const FILES_PATH = await this.utils.loadFiles("/src/handlers");
 
@@ -152,6 +156,7 @@ module.exports = class extends Client {
           require(filePath)(this);
         } catch (err) {
           console.log(`THERE WAS AN ERROR LOADING THE FILE ${filePath}`.bgRed);
+          return console.log(err);
         }
       });
     }
@@ -161,7 +166,6 @@ module.exports = class extends Client {
 
   async loadEvents() {
     console.log(`(+) Loading Events...`.yellow);
-    await this.commands.clear();
 
     const FILES_PATH = await this.utils.loadFiles("/src/events");
     this.removeAllListeners();

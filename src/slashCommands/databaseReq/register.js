@@ -1,5 +1,5 @@
-const { Client, SlashCommandBuilder, CommandInteraction } = require("discord.js");
-const interactionCreate = require("../../events/guild/interactionCreate");
+const { SlashCommandBuilder, CommandInteraction } = require("discord.js");
+const Client = require('../../structures/Client');
 
 const User = require('../../models/user');
 
@@ -33,6 +33,6 @@ module.exports = {
       return await interaction.reply('❌ Ha habido un error al intentar guardar el registro en la DB\n*Mas detalles en la consola*');
     };
 
-    return await interaction.reply(`✔ Registro guardado en la base de datos.`);
+    return await interaction.reply(`✅ Registro guardado en la base de datos.`);
   },
 };

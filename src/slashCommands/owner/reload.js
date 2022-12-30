@@ -1,9 +1,10 @@
 const {
-  Client,
   CommandInteraction,
   SlashCommandBuilder,
   EmbedBuilder,
 } = require("discord.js");
+const Client = require('../../structures/Client');
+
 
 module.exports = {
   CMD: new SlashCommandBuilder()

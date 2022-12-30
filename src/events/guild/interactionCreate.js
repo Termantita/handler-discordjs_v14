@@ -1,12 +1,34 @@
-const { OWNER_ID } = require('../../config');
+const { Client, BaseInteraction } = require("discord.js");
 
+const { OWNER_ID } = require("../../config");
+
+/* DESCRIPTION: Controla cada interacción que se cree, revisando si es del tipo 'isChatInputCommand()' y si viene de un guild o un canal, que también puede ser DM. 
+Es lo mismo a usar un client.on('interactionCreate', () => {})*/
+/**
+ * @param {Client} client
+ * @param {BaseInteraction} interaction
+ */
 module.exports = async (client, interaction) => {
   if (!interaction.guild || !interaction.channel) return;
-
-  if(!interaction.isChatInputCommand()) return;
-
+  
   const COMMAND = client.slashCommands.get(interaction?.commandName);
+  // if (interaction.isModalSubmit()) {
+  //   console.log({COMMAND});
+  //   try {
+  //     await COMMAND.modalSubmit(client, interaction, '/');
+  //   } catch (err) {
+  //     await interaction.reply({
+  //       content:
+  //         "**Ha ocurrido un error al ejecutar el comando!**\n*Mas detalles en la consola*",
+  //     });
+  //     console.log(err);
+  //     return;
+  //   }
+  // }
 
+  if (!interaction.isChatInputCommand()) return;
+  
+  // Obtine el 'commandName' de los comandos almacenados en la Collection() slashCommands cargada antes al iniciar el bot o al recargar los archivos
   if (COMMAND) {
     if (COMMAND.OWNER) {
       // const OWNERS = process.env.OWNERS_ID.split(' ');
@@ -38,12 +60,14 @@ module.exports = async (client, interaction) => {
     }
 
     try {
-      COMMAND.execute(client, interaction, "/");
+      await COMMAND.execute(client, interaction, "/");
     } catch (err) {
-      interaction.reply({
-        content:
-          "**Ha ocurrido un error al ejecutar el comando!**\n*Mas detalles en la consola*",
-      });
+      if (!interaction.isModalSubmit()) {
+        await interaction.reply({
+          content:
+            "**Ha ocurrido un error al ejecutar el comando!**\n*Mas detalles en la consola*",
+        });
+      }
       console.log(err);
       return;
     }
