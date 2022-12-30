@@ -8,11 +8,13 @@ const {
   Colors,
 } = require("discord.js");
 
-const { connectDB } = require("../db/config");
+const { ContextMenuCommandBuilder } = require('@discordjs/builders')
+
 
 const BotUtils = require("./Utils");
 
 const config = require("../config");
+const { connectDB } = require("../db/config");
 
 const token = config.TOKEN;
 const prefix = config.PREFIX;
@@ -125,7 +127,11 @@ module.exports = class extends Client {
             .split("/")
             .pop()
             .split(".")[0];
-          COMMAND.CMD.name = COMMAND_NAME;
+            if (COMMAND.ISCTXMENU) {
+              COMMAND.CMD.name = COMMAND_NAME.charAt(0).toUpperCase() + COMMAND_NAME.slice(1);
+            } else {
+              COMMAND.CMD.name = COMMAND_NAME
+            }
 
           if (COMMAND_NAME) this.slashCommands.set(COMMAND_NAME, COMMAND);
 

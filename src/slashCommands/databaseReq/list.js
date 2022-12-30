@@ -1,16 +1,14 @@
 const {
   SlashCommandBuilder,
-
-  CommandInteraction,
-
   EmbedBuilder,
-
   ActionRowBuilder,
   ButtonBuilder,
-  ButtonStyle,
+} = require("@discordjs/builders");
 
+const {
+  CommandInteraction,
+  ButtonStyle,
   ComponentType,
-  BaseInteraction,
 } = require("discord.js");
 const Client = require("../../structures/Client");
 
@@ -30,11 +28,11 @@ module.exports = {
    * @param {CommandInteraction} interaction
    */
   async execute(client, interaction) {
-    userFilter = interaction.options.get("filter")?.value || undefined;
+    userFilter = interaction.options.get("filter")?.value || false;
 
     const getRegisters = async (from = 0, limit = 15) => {
       let query;
-      if (userFilter != undefined)
+      if (userFilter)
         query = User.find({ id: userFilter })
           .skip(Number(from))
           .limit(Number(limit));
@@ -133,9 +131,7 @@ module.exports = {
       componentType: ComponentType.Button,
       time: 10000,
     });
-    /**
-     * @param {BaseInteraction} iBtn
-     **/
+
     collector.on("collect", async (iBtn) => {
       if (iBtn.user.id !== interaction.user.id)
         return iBtn.reply({

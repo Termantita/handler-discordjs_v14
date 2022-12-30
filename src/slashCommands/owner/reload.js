@@ -1,10 +1,7 @@
-const {
-  CommandInteraction,
-  SlashCommandBuilder,
-  EmbedBuilder,
-} = require("discord.js");
-const Client = require('../../structures/Client');
+const { SlashCommandBuilder, EmbedBuilder } = require("@discordjs/builders");
 
+const { CommandInteraction } = require("discord.js");
+const Client = require("../../structures/Client");
 
 module.exports = {
   CMD: new SlashCommandBuilder()
@@ -27,9 +24,8 @@ module.exports = {
    * @param {CommandInteraction} interaction
    */
   async execute(client, interaction) {
-    const args = interaction.options.get("module")?.value || 'Nada';
-    
-    
+    const args = interaction.options.get("module")?.value || "Nada";
+
     let opt = "Commands, Slash Commands, Events & Handlers";
 
     try {

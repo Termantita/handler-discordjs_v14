@@ -9,8 +9,6 @@ const {
 } = require("discord.js");
 const Client = require("../structures/Client");
 
-const User = require("../models/user");
-
 module.exports = {
   CMD: new SlashCommandBuilder().setDescription("Test de modal/formulario"),
 

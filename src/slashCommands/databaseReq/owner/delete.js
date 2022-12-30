@@ -1,8 +1,7 @@
-const {
-  SlashCommandBuilder,
-  CommandInteraction,
-} = require("discord.js");
-const Client = require('../../../structures/Client');
+const { SlashCommandBuilder } = require("@discordjs/builders");
+
+const Client = require("../../../structures/Client");
+const { CommandInteraction } = require("discord.js");
 
 const User = require("../../../models/user");
 
