@@ -1,10 +1,9 @@
 const { ContextMenuCommandBuilder } = require("@discordjs/builders");
 
-const Client = require('../../structures/Client');
+const Client = require('../structures/Client');
 const { ContextMenuCommandInteraction ,ApplicationCommandType } = require('discord.js');
 
 module.exports = {
-  ISCTXMENU: true,
   CMD: new ContextMenuCommandBuilder().setType(ApplicationCommandType.Message),
 
   /**

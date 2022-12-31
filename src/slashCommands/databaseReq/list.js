@@ -100,15 +100,15 @@ module.exports = {
     );
 
     let prevPage = new ButtonBuilder()
-      .setEmoji("◀")
+      .setEmoji({ name: "◀" })
       .setCustomId("prevPage")
       .setStyle(ButtonStyle.Primary);
     let nextPage = new ButtonBuilder()
-      .setEmoji("▶")
+      .setEmoji({ name: "▶" })
       .setCustomId("nextPage")
       .setStyle(ButtonStyle.Primary);
     let home = new ButtonBuilder()
-      .setEmoji("🏠")
+      .setEmoji({ name: "🏠" })
       .setCustomId("home")
       .setStyle(ButtonStyle.Danger);
 

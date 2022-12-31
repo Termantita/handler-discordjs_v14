@@ -1,7 +1,7 @@
 const { BaseInteraction } = require("discord.js");
 const Client = require("../../structures/Client");
 
-const { OWNER_ID } = require("../../config");
+// const { OWNER_ID } = require("../../config");
 
 /* DESCRIPTION: Controla cada interacción que se cree, revisando si es del tipo 'isChatInputCommand()' y si viene de un guild o un canal, que también puede ser DM. 
 Es lo mismo a usar un client.on('interactionCreate', () => {})*/
@@ -21,7 +21,7 @@ module.exports = async (client, interaction) => {
 
         if (!OWNER_ID.includes(interaction.user.id))
           return interaction.reply({
-            content: `❌ **Solo los dueños de este bot pueden ejecutar este comando**\nDueño del bot: ${OWNER_ID}`,
+            content: `❌ **Solo los dueños de este bot pueden ejecutar este comando**\nDueño del bot: ${process.env.OWNER_ID}`,
           });
       }
 
@@ -59,7 +59,7 @@ module.exports = async (client, interaction) => {
       }
     }
   } else if (interaction.isContextMenuCommand()) {
-    const CTXCOMMAND = client.slashCommands.get(interaction?.commandName.toLowerCase());
+    const CTXCOMMAND = client.appCommands.get(interaction?.commandName.toLowerCase());
     if (!CTXCOMMAND) return;
 
     try {
@@ -70,5 +70,8 @@ module.exports = async (client, interaction) => {
           "**Ha ocurrido un error al ejecutar el comando!**\n*Mas detalles en la consola*",
       });
     }
+  }
+  else {
+    return console.log('Interaction not handled');
   }
 };

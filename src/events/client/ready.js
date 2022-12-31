@@ -1,9 +1,15 @@
-const { Client } = require("discord.js");
+const Client = require("../../structures/Client");
 
-module.exports = (client = Client) => {
+
+/**
+ * 
+ * @param {Client} client 
+ */
+module.exports = (client) => {
   if (client?.application?.commands) {
-    client.application.commands.set(client.slashArray);
+    client.application.commands.set(client.slashctxArray);
     console.log(`(/) ${client.slashCommands.size} Published Commands`.green);
+    console.log(`(ctx) ${client.appCommands.size} Published Commands`.green);
   }
 
   setTimeout(() => [console.clear(),

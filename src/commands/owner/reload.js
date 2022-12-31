@@ -14,22 +14,33 @@ module.exports = {
    * @param {String} prefix
    * **/
   async execute(client, message, args, prefix) {
-    console.log(args);
-    let opt = "Commands, Slash Commands, Events & Handlers";
+    let opt = "Comandos, Comandos diagonales, Comandos de aplicación, Handlers y eventos";
 
     try {
-      switch (args[0]?.toLowerCase()) {
+      switch (args) {
         case "commands":
           {
-            opt = "Commands";
+            opt = "Commandos";
             await client.loadCommands();
           }
           break;
 
-        case "scommands":
+        // case "slashCommands":
+        //   {
+        //     opt = "Comandos diagonales";
+        //     await client.loadSlashCommands();
+        //   }
+        //   break;
+        // case "appCommands":
+        //   {
+        //     opt = "Comandos de aplicación";
+        //     await client.loadAppCommands();
+        //   }
+        //   break;
+        case "slashappCommands":
           {
-            opt = "Slash Commands";
-            await client.loadSlashCommands();
+            opt = "Comandos diagonales y de aplicación";
+            await client.loadSlashAppCommands();
           }
           break;
 
@@ -42,7 +53,7 @@ module.exports = {
 
         case "events":
           {
-            opt = "Events";
+            opt = "Eventos";
             await client.loadEvents();
           }
           break;
@@ -50,14 +61,16 @@ module.exports = {
         default:
           {
             await client.loadCommands();
-            await client.loadSlashCommands();
+            // await client.loadSlashCommands();
+            // await client.loadAppCommands();
+            await client.loadSlashAppCommands();
             await client.loadHandlers();
             await client.loadEvents();
           }
           break;
       }
 
-      message.reply({
+      return await interaction.reply({
         embeds: [
           new EmbedBuilder().addFields({
             name: `✅ ${opt} recargados`,
@@ -67,7 +80,7 @@ module.exports = {
       });
     } catch (e) {
       console.log(e);
-      message.reply(
+      return await interaction.reply(
         "❌ Ha habido un error al intentar recargar los archivos!\n*Mas detalles en la consola*"
       );
     }
