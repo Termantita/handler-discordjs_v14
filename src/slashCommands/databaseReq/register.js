@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders')
 const { CommandInteraction } = require("discord.js");
 const Client = require('../../structures/Client');
 
-const User = require('../../models/user');
+const Message = require('../../models/message');
 
 module.exports = {
   CMD: new SlashCommandBuilder()
@@ -21,20 +21,23 @@ module.exports = {
    */
   async execute(client, interaction) {
     const target = interaction.user;
-    const username = target.username;
+    const username = target.tag;
     const id = target.id;
-    const msg = interaction.options.get('message').value;
+    const message = interaction.options.get('message').value;
     // const msg = interaction.options.data[0]['value'];
-    
-    const user = new User({username, id, msg})
+    if (!client.restInstance.isLogged) {
 
-    try {
-      await user.save();
-    } catch (err) {
-      console.log(err);
-      return await interaction.reply('❌ Ha habido un error al intentar guardar el registro en la DB\n*Mas detalles en la consola*');
-    };
+      const cursor = new Message({username, id, message});
 
+      try {
+        await cursor.save();
+      } catch (err) {
+        console.log(err);
+        return await interaction.reply('❌ Ha habido un error al intentar guardar el registro en la DB\n*Mas detalles en la consola*');
+      };
+    } else {
+      client.restInstance.postMessage(username, id, message);
+    }
     return await interaction.reply(`✅ Registro guardado en la base de datos.`);
   },
 };

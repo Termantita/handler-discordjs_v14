@@ -3,7 +3,7 @@ const { SlashCommandBuilder } = require("@discordjs/builders");
 const Client = require("../../../structures/Client");
 const { CommandInteraction } = require("discord.js");
 
-const User = require("../../../models/user");
+const Message = require("../../../models/message");
 
 module.exports = {
   CMD: new SlashCommandBuilder()
@@ -25,10 +25,10 @@ module.exports = {
     const option = interaction.options.get("registers").value;
 
     if (option === "deleteRegisters") {
-      const user = await User.deleteMany();
+      const message = await Message.deleteMany();
       try {
         return await interaction.reply(
-          `Se han eliminado ${user.deletedCount} registros de la base de datos`
+          `Se han eliminado ${message.deletedCount} registros de la base de datos`
         );
       } catch (err) {
         console.log(err);

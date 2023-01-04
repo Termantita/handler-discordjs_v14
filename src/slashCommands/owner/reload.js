@@ -34,7 +34,7 @@ module.exports = {
       switch (args) {
         case "commands":
           {
-            opt = "Commandos";
+            opt = "Comandos";
             await client.loadCommands();
           }
           break;

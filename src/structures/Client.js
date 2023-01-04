@@ -12,6 +12,7 @@ const BotUtils = require("./Utils");
 
 // const config = require("../config");
 const { connectDB } = require("../db/config");
+const Rest = require("../models/rest");
 
 const token = process.env.TOKEN;
 const prefix = process.env.PREFIX;
@@ -67,6 +68,8 @@ module.exports = class extends Client {
     this.slashctxArray = [];
 
     this.utils = new BotUtils(this);
+    this.restInstance = new Rest();
+    this.restInstance.connSuccess = false;
 
     this.start();
   }
@@ -78,9 +81,25 @@ module.exports = class extends Client {
     // await this.loadSlashCommands();
     // await this.loadAppCommands();
     await this.loadSlashAppCommands();
-
-    await connectDB();
-    this.login(token);
+    const login = await this.restInstance.login(
+      process.env.REST_USER,
+      process.env.REST_PASSWORD,
+      process.env.REST_EMAIL
+    );
+    try {
+      login;
+    } catch (err) {
+      if (!login.ok) {
+        console.log("ERROR:".red + ``.reset + err);
+        console.log(login.errors);
+        console.log("Trying connecting to DB via mongoose...");
+        await connectDB();
+      }
+    }
+    if (login.ok) {
+      console.log("NOTE: The REST API of the bot is online, models that works with mongoose aren't going to work")
+    }
+    await this.login(token);
   }
 
   async loadCommands() {
@@ -117,9 +136,9 @@ module.exports = class extends Client {
       console.log(`(/) Loading Commands...`.yellow);
       this.slashCommands.clear();
       this.slashArray = [];
-  
+
       const FILES_PATH = await this.utils.loadFiles("/src/slashCommands");
-  
+
       if (FILES_PATH.length) {
         FILES_PATH.forEach((filePath) => {
           try {
@@ -131,31 +150,33 @@ module.exports = class extends Client {
               .pop()
               .split(".")[0];
             COMMAND.CMD.name = COMMAND_NAME;
-  
+
             if (COMMAND_NAME) this.slashCommands.set(COMMAND_NAME, COMMAND);
-  
+
             this.slashArray.push(COMMAND.CMD.toJSON());
           } catch (err) {
-            console.log(`THERE WAS AN ERROR LOADING THE FILE ${filePath}`.bgRed);
+            console.log(
+              `THERE WAS AN ERROR LOADING THE FILE ${filePath}`.bgRed
+            );
             console.log(err);
           }
         });
       }
-  
+
       console.log(`(/) ${this.slashCommands.size} Loaded Commands`.green);
-  
+
       // if (this?.application?.commands) {
       //   this.application.commands.set(this.slashArray);
       //   console.log(`(/) ${this.slashCommands.size} Published Commands`.green);
       // }
-    }
+    };
     const loadAppCommands = async () => {
       console.log(`(ctx) Loading Commands...`.yellow);
       this.appCommands.clear();
       this.ctxArray = [];
-  
+
       const FILES_PATH = await this.utils.loadFiles("/src/appCommands");
-  
+
       if (FILES_PATH.length) {
         FILES_PATH.forEach((filePath) => {
           try {
@@ -167,25 +188,29 @@ module.exports = class extends Client {
               .pop()
               .split(".")[0];
             APPCOMMAND.CMD.name =
-              APPCOMMAND_NAME.charAt(0).toUpperCase() + APPCOMMAND_NAME.slice(1);
-  
-            if (APPCOMMAND_NAME) this.appCommands.set(APPCOMMAND_NAME, APPCOMMAND);
-  
+              APPCOMMAND_NAME.charAt(0).toUpperCase() +
+              APPCOMMAND_NAME.slice(1);
+
+            if (APPCOMMAND_NAME)
+              this.appCommands.set(APPCOMMAND_NAME, APPCOMMAND);
+
             this.ctxArray.push(APPCOMMAND.CMD.toJSON());
           } catch (err) {
-            console.log(`THERE WAS AN ERROR LOADING THE FILE ${filePath}`.bgRed);
+            console.log(
+              `THERE WAS AN ERROR LOADING THE FILE ${filePath}`.bgRed
+            );
             console.log(err);
           }
         });
       }
-  
+
       console.log(`(ctx) ${this.appCommands.size} Loaded Commands`.green);
-  
+
       // if (this?.application?.commands) {
       //   this.application.commands.set(this.slashctxArray);
       //   console.log(`(ctx) ${this.appCommands.size} Published Commands`.green);
       // }
-    }
+    };
 
     await loadSlashCommands();
     await loadAppCommands();
@@ -196,8 +221,6 @@ module.exports = class extends Client {
       console.log(`(ctx) ${this.appCommands.size} Published Commands`.green);
     }
   }
-
-
 
   async loadHandlers() {
     console.log(`(-) Loading Handlers...`.yellow);

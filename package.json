@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "axios": "^1.2.2",
     "colors": "^1.4.0",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
@@ -7,13 +8,16 @@
     "mongoose": "^6.8.0"
   },
   "name": "bot",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "main": "./src/app.js",
   "scripts": {
     "start": "node ./src/app",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Terma",
   "license": "ISC",
-  "description": ""
+  "description": "Handler for discord.js v14",
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
 }

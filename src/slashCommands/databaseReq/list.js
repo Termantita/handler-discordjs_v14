@@ -12,7 +12,7 @@ const {
 } = require("discord.js");
 const Client = require("../../structures/Client");
 
-const User = require("../../models/user");
+const Message = require("../../models/message");
 
 module.exports = {
   CMD: new SlashCommandBuilder()
@@ -28,26 +28,30 @@ module.exports = {
    * @param {CommandInteraction} interaction
    */
   async execute(client, interaction) {
-    userFilter = interaction.options.get("filter")?.value || false;
+    const messageFilter = interaction.options.get("filter")?.value || "";
+    const getMessages = async (from = 0, limit = 15) => {
+      if (!client.restInstance.isLogged) {
+        let query;
+        if (messageFilter)
+          query = Message.find({ id: messageFilter })
+            .skip(Number(from))
+            .limit(Number(limit));
+        else query = Message.find().skip(Number(from)).limit(Number(limit));
 
-    const getRegisters = async (from = 0, limit = 15) => {
-      let query;
-      if (userFilter)
-        query = User.find({ id: userFilter })
-          .skip(Number(from))
-          .limit(Number(limit));
-      else query = User.find().skip(Number(from)).limit(Number(limit));
-
-      const [total, registers] = await Promise.all([
-        User.countDocuments(),
-        query,
-      ]);
-      return { total, registers };
+        const [total, messages] = await Promise.all([
+          Message.countDocuments(),
+          query,
+        ]);
+        return { total, messages };
+      } else {
+        const { total, messages } = await client.restInstance.getMessages(from, limit, messageFilter);
+        return { total, messages }
+      }
     };
 
-    const { total, registers } = await getRegisters(0);
+    const { total, messages } = await getMessages(0);
 
-    if (total === 0 && registers.length === 0) {
+    if (total === 0 && messages.length === 0) {
       return await interaction.reply({
         embeds: [
           new EmbedBuilder()
@@ -64,10 +68,10 @@ module.exports = {
         .setTitle(`Mostrando ${total} registros`)
         .setColor(client.color);
 
-      registers.forEach((reg) =>
+      messages.forEach((reg) =>
         embed.addFields({
           name: `${reg.username} - *${reg.id}*`,
-          value: reg.msg,
+          value: reg.messsage,
         })
       );
 
@@ -95,8 +99,11 @@ module.exports = {
       .setTitle(`Registros: ${lastTotal}. ${index} de ${totalPages}`)
       .setColor(client.color);
 
-    registers.forEach((reg) =>
-      embed.addFields({ name: `${reg.username} - *${reg.id}*`, value: reg.msg })
+    messages.forEach((reg) =>
+      embed.addFields({
+        name: `${reg.username} - *${reg.id}*`,
+        value: reg.message,
+      })
     );
 
     let prevPage = new ButtonBuilder()
@@ -129,6 +136,7 @@ module.exports = {
 
     const collector = currentPage.createMessageComponentCollector({
       componentType: ComponentType.Button,
+      filter: (u) => u.user.id === interaction.user.id,
       time: 10000,
     });
 
@@ -143,7 +151,6 @@ module.exports = {
         if (index > 0) index--;
       } else if (iBtn.customId === "nextPage") {
         if (index < totalPages) index++;
-        // index++;
       } else if (iBtn.customId === "home") {
         index = 0;
       }
@@ -158,7 +165,6 @@ module.exports = {
 
       if (index === totalPages) {
         nextPage.setDisabled(true);
-        restRegisters = lastTotal % 15;
       } else nextPage.setDisabled(false);
 
       const embed = new EmbedBuilder()
@@ -168,12 +174,12 @@ module.exports = {
         )
         .setColor(client.color);
 
-      const { registers } = await getRegisters(15 * index);
+      const { messages } = await getMessages(15 * index);
 
-      registers.forEach((reg) =>
+      messages.forEach((reg) =>
         embed.addFields({
           name: `${reg.username} - *${reg.id}*`,
-          value: reg.msg,
+          value: reg.message,
         })
       );
 
@@ -193,6 +199,7 @@ module.exports = {
         content: "Se terminó el tiempo para interacturar con los botones",
         ephemeral: true,
       });
+      interaction.deleteReply();
       index = 0;
     });
     return;

@@ -19,7 +19,7 @@ module.exports = async (client, interaction) => {
       if (COMMAND.OWNER) {
         // const OWNERS = process.env.OWNERS_ID.split(' ');
 
-        if (!OWNER_ID.includes(interaction.user.id))
+        if (!process.env.OWNER_ID.includes(interaction.user.id))
           return interaction.reply({
             content: `❌ **Solo los dueños de este bot pueden ejecutar este comando**\nDueño del bot: ${process.env.OWNER_ID}`,
           });

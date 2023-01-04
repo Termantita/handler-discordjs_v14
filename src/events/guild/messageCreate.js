@@ -1,7 +1,6 @@
 const { Message, Client } = require("discord.js");
-const { PREFIX } = require("../../config");
 
-const prefix = PREFIX;
+const prefix = process.env.PREFIX;
 
 /**
 * @param {Client} client

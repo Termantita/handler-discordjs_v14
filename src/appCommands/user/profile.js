@@ -30,17 +30,18 @@ module.exports = {
     //   .setThumbnail(interaction.user.displayAvatarURL());
 
     // return await interaction.reply({ embeds: [embed] });
+    const target = interaction.targetUser;
     const embed = new EmbedBuilder()
-      .setTitle(`Perfil de ${interaction.user.tag}`)
+      .setTitle(`Perfil de ${target.tag}`)
       .setColor(client.color)
       .addFields(
         { name: 'Información del usuario', 
-        value: `**Nombre**: ${interaction.user.username}\n
-                **Discriminador**: ${interaction.user.discriminator}\n
-                **ID**: ${interaction.user.id}\n
-                **Creacion**: ${interaction.user.createdAt}` },
+        value: `**Nombre**: ${target.username}\n
+                **Discriminador**: ${target.discriminator}\n
+                **ID**: ${target.id}\n
+                **Creación de la cuenta:**: ${target.createdAt}` },
       )
-      .setThumbnail(interaction.user.displayAvatarURL());
+      .setThumbnail(target.displayAvatarURL());
 
     return await interaction.reply({ embeds: [embed] });
   },
