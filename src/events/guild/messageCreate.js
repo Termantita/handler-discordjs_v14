@@ -1,12 +1,16 @@
 const { Message, Client } = require("discord.js");
 
-const prefix = process.env.PREFIX || "m!";
+const prefix = process.env.PREFIX;
 
-module.exports = async (client = Client, message = Message) => {
+/**
+* @param {Client} client
+* @param {Message} message
+**/
+module.exports = async (client, message) => {
   if (!message.guild || !message.channel || message.author.bot) return;
 
   if (!message.content.startsWith(prefix)) return;
-
+  
   const ARGS = message.content
     .slice(prefix.length)
     .trim()
